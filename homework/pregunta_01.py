@@ -36,8 +36,12 @@ def pregunta_01():
         )
 
     # Convertir fechas al formato YYYY-MM-DD
-    df["fecha_de_beneficio"] = pd.to_datetime(
-        df["fecha_de_beneficio"], errors="coerce", dayfirst=True
+    df["fecha_de_beneficio"] = df["fecha_de_beneficio"].apply(
+        lambda x: (
+            "/".join([y for y in reversed(x.split("/"))])
+            if len(x.split("/")[0]) == 4
+            else x
+        )
     )
 
     # Normalizar idea de negocio
@@ -62,7 +66,9 @@ def pregunta_01():
     df["estrato"] = (
         df["estrato"].astype(str).str.replace("[^0-9]", "", regex=True).astype(int)
     )
-    df["comuna_ciudadano"] = df["comuna_ciudadano"].astype(float).astype(int)
+    df["comuna_ciudadano"] = (
+        df["comuna_ciudadano"].apply(lambda x: str(int(x)).replace("0", "")).astype(int)
+    )
 
     # Corregir barrios
     # Corregir numeraciones
@@ -75,12 +81,13 @@ def pregunta_01():
         lambda x: str(x).replace("bel?n", "belen").replace(".", "").replace("?", "ñ")
     )
 
+    # Corregir linea credito
+    df["línea_credito"] = df["línea_credito"].apply(
+        lambda x: str(x).replace("soli_diaria", "solidaria").replace("cap.", "cap_")
+    )
+
     # Eliminar duplicados
     df.drop_duplicates(inplace=True)
-
-    print(df["barrio"].unique())
-    print(len(df["barrio"].unique()))
-    print(df.head)
 
     # Guardar el archivo limpio
     df.to_csv("./files/output/solicitudes_de_credito.csv", sep=";", index=False)
