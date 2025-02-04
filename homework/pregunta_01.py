@@ -76,7 +76,7 @@ def pregunta_01():
 
     # Corregir caracteres faltantes
     df["barrio"] = df["barrio"].apply(
-        lambda x: str(x).replace("bel?n", "belen").replace(".", "").replace("?", "ñ")
+        lambda x: str(x).replace(".", "").replace("?", "ñ")
     )
 
     # Corregir linea credito
@@ -87,7 +87,10 @@ def pregunta_01():
     # Eliminar duplicados
     df.drop_duplicates(inplace=True)
 
-    print(df.monto_del_credito.unique())
+    conteo_barrios = df["barrio"].value_counts()
+    print(conteo_barrios)
+
+    print(df.barrio.value_counts().to_list())
 
     # Guardar el archivo limpio
     df.to_csv("./files/output/solicitudes_de_credito.csv", sep=";", index=False)
