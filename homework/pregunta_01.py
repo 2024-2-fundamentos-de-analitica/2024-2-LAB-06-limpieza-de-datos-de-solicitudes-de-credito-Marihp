@@ -64,10 +64,22 @@ def pregunta_01():
     )
     df["comuna_ciudadano"] = df["comuna_ciudadano"].astype(float).astype(int)
 
+    # Corregir barrios
+    # Corregir numeraciones
+    df["barrio"] = df["barrio"].apply(
+        lambda x: str(x).replace("no.", "no_").replace("no ", "no_").replace("__", "_")
+    )
+
+    # Corregir caracteres faltantes
+    df["barrio"] = df["barrio"].apply(
+        lambda x: str(x).replace("bel?n", "belen").replace(".", "").replace("?", "ñ")
+    )
+
     # Eliminar duplicados
     df.drop_duplicates(inplace=True)
 
-    print(df.info())
+    print(df["barrio"].unique())
+    print(len(df["barrio"].unique()))
     print(df.head)
 
     # Guardar el archivo limpio
