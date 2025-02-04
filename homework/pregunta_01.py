@@ -91,7 +91,7 @@ def pregunta_01():
     # Eliminar duplicados
     df.drop_duplicates(inplace=True)
 
-    conteo_barrios = df["barrio"].value_counts()
+    conteo_barrios = df["barrio"].value_counts().to_list()
     print(conteo_barrios)
 
     # Guardar el archivo limpio
