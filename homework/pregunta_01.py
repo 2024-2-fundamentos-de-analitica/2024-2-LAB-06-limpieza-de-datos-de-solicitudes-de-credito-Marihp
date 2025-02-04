@@ -56,9 +56,7 @@ def pregunta_01():
     # Convertir monto_del_credito a número
     df["monto_del_credito"] = (
         df["monto_del_credito"]
-        .astype(str)
-        .replace(r"[\$,]", "", regex=True)
-        .astype(float)
+        .apply(lambda x: str(x).replace("$ ", "").replace(",", "").split(".")[0])
         .astype(int)
     )
 
@@ -88,6 +86,8 @@ def pregunta_01():
 
     # Eliminar duplicados
     df.drop_duplicates(inplace=True)
+
+    print(df.monto_del_credito.unique())
 
     # Guardar el archivo limpio
     df.to_csv("./files/output/solicitudes_de_credito.csv", sep=";", index=False)
